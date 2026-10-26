@@ -1,0 +1,926 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeachFlow | Teacher Dashboard</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f5fb;
+    color: #252b42;
+}
+
+header {
+    background: #302b63;
+    color: white;
+    padding: 22px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 {
+    font-size: 28px;
+}
+
+header p {
+    margin-top: 6px;
+    color: #dedcff;
+}
+
+.profile {
+    background: #49428b;
+    padding: 12px 18px;
+    border-radius: 12px;
+}
+
+.container {
+    display: flex;
+    min-height: calc(100vh - 90px);
+}
+
+.sidebar {
+    width: 245px;
+    background: white;
+    padding: 20px 12px;
+    box-shadow: 2px 0 12px #00000008;
+    flex-shrink: 0;
+}
+
+.sidebar h3 {
+    padding: 10px;
+    color: #8b8ca3;
+    font-size: 13px;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 13px;
+    margin-bottom: 5px;
+    border: none;
+    background: transparent;
+    color: #464968;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 9px;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+    background: #eeedff;
+    color: #5145cd;
+}
+
+main {
+    flex: 1;
+    padding: 28px;
+    min-width: 0;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #777b91;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(130px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 5px 18px #28285808;
+}
+
+.card .icon {
+    font-size: 28px;
+}
+
+.card h3 {
+    color: #777b91;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.card h2 {
+    margin-top: 10px;
+    font-size: 27px;
+}
+
+.panel {
+    background: white;
+    border-radius: 15px;
+    padding: 23px;
+    margin-bottom: 22px;
+    box-shadow: 0 5px 18px #28285808;
+}
+
+.panel h2 {
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section.show {
+    display: block;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px 10px;
+    text-align: left;
+    border-bottom: 1px solid #eeeef5;
+}
+
+th {
+    background: #f6f5ff;
+    color: #5145cd;
+}
+
+.progress {
+    background: #e9e8f5;
+    height: 9px;
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 80px;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    background: #6558db;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    background: #5b50cf;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 4px 3px 4px 0;
+}
+
+.btn:hover {
+    background: #4035a8;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 14px;
+    border: 1px solid #ddddea;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.task {
+    padding: 14px;
+    background: #f8f8ff;
+    margin-bottom: 10px;
+    border-radius: 9px;
+}
+
+.notice {
+    padding: 16px;
+    border-left: 4px solid #6558db;
+    background: #f8f7ff;
+    border-radius: 7px;
+    margin-bottom: 12px;
+}
+
+footer {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+}
+
+@media (max-width: 1000px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    main {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 650px) {
+    .container {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .sidebar button {
+        display: inline-block;
+        width: auto;
+    }
+
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    main {
+        padding: 12px;
+    }
+
+    .panel {
+        overflow-x: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>📘 TeachFlow</h1>
+        <p>Teach Smart. Manage Easy.</p>
+    </div>
+    <div class="profile">👩‍🏫 Teacher Dashboard</div>
+</header>
+
+<div class="container">
+
+<aside class="sidebar">
+    <h3>MAIN MENU</h3>
+
+    <button class="active" onclick="showPage('dashboard', this)">🏠 Dashboard</button>
+    <button onclick="showPage('subjects', this)">📚 My Subjects</button>
+    <button onclick="showPage('syllabus', this)">📖 Syllabus Tracker</button>
+    <button onclick="showPage('lessons', this)">📝 Lesson Planning</button>
+    <button onclick="showPage('attendance', this)">✅ Attendance</button>
+    <button onclick="showPage('marks', this)">📊 Marks & Results</button>
+    <button onclick="showPage('materials', this)">📂 Study Material</button>
+    <button onclick="showPage('practicals', this)">🧪 Practical Management</button>
+    <button onclick="showPage('progress', this)">📈 Student Progress</button>
+    <button onclick="showPage('questions', this)">❓ Question Bank</button>
+    <button onclick="showPage('reports', this)">📑 Reports</button>
+    <button onclick="showPage('timetable', this)">🗓️ Timetable</button>
+    <button onclick="showPage('notices', this)">📢 Notices</button>
+</aside>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="section show">
+    <div class="welcome">
+        <h2>Welcome to TeachFlow! 👋</h2>
+        <p>Manage your teaching activities from one place.</p>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <div class="icon">📚</div>
+            <h3>Total Subjects</h3>
+            <h2 id="subjectCount">6</h2>
+        </div>
+
+        <div class="card">
+            <div class="icon">👨‍🎓</div>
+            <h3>Total Students</h3>
+            <h2>120</h2>
+        </div>
+
+        <div class="card">
+            <div class="icon">✅</div>
+            <h3>Attendance</h3>
+            <h2>85%</h2>
+        </div>
+
+        <div class="card">
+            <div class="icon">📖</div>
+            <h3>Syllabus Completed</h3>
+            <h2>60%</h2>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>📌 Today's Tasks</h2>
+        <div class="task">☑ Prepare today's lecture</div>
+        <div class="task">☐ Update student attendance</div>
+        <div class="task">☐ Check assignments</div>
+        <div class="task">☐ Update syllabus progress</div>
+    </div>
+
+    <div class="panel">
+        <h2>📢 Recent Notices</h2>
+        <div class="notice">Department meeting scheduled for Friday.</div>
+        <div class="notice">Students must submit practical journals.</div>
+    </div>
+</section>
+
+<!-- SUBJECTS -->
+<section id="subjects" class="section">
+    <div class="panel">
+        <h2>📚 My Subjects</h2>
+
+        <form onsubmit="addSubject(event)">
+            <label>Subject Name</label>
+            <input id="subjectName" placeholder="Enter subject name" required>
+
+            <label>Subject Code</label>
+            <input id="subjectCode" placeholder="Enter subject code" required>
+
+            <button class="btn" type="submit">+ Add Subject</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr><th>Subject</th><th>Code</th></tr>
+            </thead>
+            <tbody id="subjectTable">
+                <tr><td>Operating System</td><td>OS101</td></tr>
+                <tr><td>Data Structure</td><td>DS102</td></tr>
+                <tr><td>Database Management</td><td>DB103</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- SYLLABUS -->
+<section id="syllabus" class="section">
+    <div class="panel">
+        <h2>📖 Syllabus Management</h2>
+
+        <form onsubmit="addSyllabus(event)">
+            <label>Chapter Name</label>
+            <input id="chapterName" placeholder="Enter chapter name" required>
+
+            <label>Completion Percentage</label>
+            <input id="chapterPercent" type="number" min="0" max="100"
+                   placeholder="0 to 100" required>
+
+            <button class="btn" type="submit">Update Syllabus</button>
+        </form>
+
+        <div id="syllabusList">
+            <div class="task">
+                <b>Chapter 1: Introduction</b>
+                <p>80% completed</p>
+                <div class="progress"><span style="width:80%"></span></div>
+            </div>
+
+            <div class="task">
+                <b>Chapter 2: Basic Concepts</b>
+                <p>50% completed</p>
+                <div class="progress"><span style="width:50%"></span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LESSON PLANNING -->
+<section id="lessons" class="section">
+    <div class="panel">
+        <h2>📝 Lesson Planning</h2>
+
+        <form onsubmit="addLesson(event)">
+            <label>Lesson Topic</label>
+            <input id="lessonTopic" placeholder="Enter topic" required>
+
+            <label>Subject</label>
+            <input id="lessonSubject" placeholder="Enter subject" required>
+
+            <label>Lecture Date</label>
+            <input id="lessonDate" type="date" required>
+
+            <label>Learning Objectives</label>
+            <textarea id="lessonObjective"
+                      placeholder="What will students learn?"
+                      required></textarea>
+
+            <button class="btn" type="submit">Save Lesson Plan</button>
+        </form>
+
+        <div id="lessonList"></div>
+    </div>
+</section>
+
+<!-- ATTENDANCE -->
+<section id="attendance" class="section">
+    <div class="panel">
+        <h2>✅ Student Attendance</h2>
+
+        <form onsubmit="addAttendance(event)">
+            <label>Student Name</label>
+            <input id="studentName" placeholder="Enter student name" required>
+
+            <label>Roll Number</label>
+            <input id="rollNumber" placeholder="Enter roll number" required>
+
+            <label>Attendance Status</label>
+            <select id="attendanceStatus">
+                <option>Present</option>
+                <option>Absent</option>
+            </select>
+
+            <button class="btn" type="submit">Save Attendance</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll No.</th>
+                    <th>Student</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- MARKS -->
+<section id="marks" class="section">
+    <div class="panel">
+        <h2>📊 Marks & Results</h2>
+
+        <form onsubmit="addMarks(event)">
+            <label>Student Name</label>
+            <input id="marksName" placeholder="Student name" required>
+
+            <label>Subject</label>
+            <input id="marksSubject" placeholder="Subject name" required>
+
+            <label>Marks Obtained</label>
+            <input id="obtainedMarks" type="number" min="0"
+                   placeholder="Marks obtained" required>
+
+            <label>Maximum Marks</label>
+            <input id="maximumMarks" type="number" min="1"
+                   placeholder="Maximum marks" required>
+
+            <button class="btn" type="submit">Calculate Result</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr><th>Student</th><th>Subject</th><th>Marks</th><th>Percentage</th></tr>
+            </thead>
+            <tbody id="marksTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- STUDY MATERIAL -->
+<section id="materials" class="section">
+    <div class="panel">
+        <h2>📂 Study Material</h2>
+
+        <form onsubmit="addMaterial(event)">
+            <label>Material Title</label>
+            <input id="materialTitle" placeholder="Notes or PDF title" required>
+
+            <label>Material Link</label>
+            <input id="materialLink" type="url"
+                   placeholder="https://example.com/notes.pdf" required>
+
+            <button class="btn" type="submit">Add Material Link</button>
+        </form>
+
+        <div id="materialList"></div>
+        <p>Note: This demo saves links only during the current session.</p>
+    </div>
+</section>
+
+<!-- PRACTICALS -->
+<section id="practicals" class="section">
+    <div class="panel">
+        <h2>🧪 Practical Management</h2>
+
+        <form onsubmit="addPractical(event)">
+            <label>Practical Title</label>
+            <input id="practicalTitle" placeholder="Enter practical title" required>
+
+            <label>Submission Date</label>
+            <input id="practicalDate" type="date" required>
+
+            <button class="btn" type="submit">Add Practical</button>
+        </form>
+
+        <div id="practicalList"></div>
+    </div>
+</section>
+
+<!-- STUDENT PROGRESS -->
+<section id="progress" class="section">
+    <div class="panel">
+        <h2>📈 Student Progress</h2>
+
+        <table>
+            <thead>
+                <tr><th>Student</th><th>Attendance</th><th>Performance</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Student 1</td>
+                    <td>90%</td>
+                    <td><div class="progress"><span style="width:85%"></span></div></td>
+                </tr>
+                <tr>
+                    <td>Student 2</td>
+                    <td>75%</td>
+                    <td><div class="progress"><span style="width:65%"></span></div></td>
+                </tr>
+                <tr>
+                    <td>Student 3</td>
+                    <td>95%</td>
+                    <td><div class="progress"><span style="width:92%"></span></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- QUESTION BANK -->
+<section id="questions" class="section">
+    <div class="panel">
+        <h2>❓ Question Bank</h2>
+
+        <form onsubmit="addQuestion(event)">
+            <label>Subject</label>
+            <input id="questionSubject" placeholder="Subject name" required>
+
+            <label>Question</label>
+            <textarea id="questionText" placeholder="Enter question" required></textarea>
+
+            <label>Marks</label>
+            <select id="questionMarks">
+                <option>2</option>
+                <option>4</option>
+                <option>6</option>
+                <option>8</option>
+            </select>
+
+            <button class="btn" type="submit">Add Question</button>
+        </form>
+
+        <div id="questionList"></div>
+    </div>
+</section>
+
+<!-- REPORTS -->
+<section id="reports" class="section">
+    <div class="panel">
+        <h2>📑 Reports</h2>
+        <p>View a basic summary of records entered in this demo.</p>
+        <br>
+        <button class="btn" onclick="generateReport()">Generate Summary</button>
+        <button class="btn" onclick="window.print()">Print Report</button>
+        <div id="reportOutput"></div>
+    </div>
+</section>
+
+<!-- TIMETABLE -->
+<section id="timetable" class="section">
+    <div class="panel">
+        <h2>🗓️ Weekly Timetable</h2>
+
+        <table>
+            <thead>
+                <tr><th>Day</th><th>Time</th><th>Subject</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Monday</td><td>10:00 AM</td><td>Operating System</td></tr>
+                <tr><td>Tuesday</td><td>11:00 AM</td><td>Data Structure</td></tr>
+                <tr><td>Wednesday</td><td>10:00 AM</td><td>Database Management</td></tr>
+                <tr><td>Thursday</td><td>12:00 PM</td><td>Programming</td></tr>
+                <tr><td>Friday</td><td>11:00 AM</td><td>Practical</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- NOTICES -->
+<section id="notices" class="section">
+    <div class="panel">
+        <h2>📢 Notices & Announcements</h2>
+
+        <form onsubmit="addNotice(event)">
+            <label>Notice Title</label>
+            <input id="noticeTitle" placeholder="Notice title" required>
+
+            <label>Notice Details</label>
+            <textarea id="noticeDetails" placeholder="Enter notice" required></textarea>
+
+            <button class="btn" type="submit">Publish Notice</button>
+        </form>
+
+        <div id="noticeList"></div>
+    </div>
+</section>
+
+</main>
+</div>
+
+<footer>
+    © 2026 TeachFlow | Teach Smart. Manage Easy.
+</footer>
+
+<script>
+function showPage(pageId, button) {
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.remove("show");
+    });
+
+    document.getElementById(pageId).classList.add("show");
+
+    document.querySelectorAll(".sidebar button").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+}
+
+function addSubject(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("subjectName").value.trim();
+    const code = document.getElementById("subjectCode").value.trim();
+
+    if (!name || !code) return;
+
+    const row = document.createElement("tr");
+    [name, code].forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+    });
+
+    document.getElementById("subjectTable").appendChild(row);
+
+    const count = document.getElementById("subjectTable").rows.length;
+    document.getElementById("subjectCount").textContent = count;
+
+    event.target.reset();
+}
+
+function addSyllabus(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("chapterName").value.trim();
+    const percent = Number(document.getElementById("chapterPercent").value);
+
+    if (!name || percent < 0 || percent > 100) return;
+
+    const card = document.createElement("div");
+    card.className = "task";
+
+    const heading = document.createElement("b");
+    heading.textContent = name;
+
+    const label = document.createElement("p");
+    label.textContent = percent + "% completed";
+
+    const progress = document.createElement("div");
+    progress.className = "progress";
+
+    const bar = document.createElement("span");
+    bar.style.width = percent + "%";
+
+    progress.appendChild(bar);
+    card.append(heading, label, progress);
+
+    document.getElementById("syllabusList").appendChild(card);
+    event.target.reset();
+}
+
+function addLesson(event) {
+    event.preventDefault();
+
+    const topic = document.getElementById("lessonTopic").value.trim();
+    const subject = document.getElementById("lessonSubject").value.trim();
+    const date = document.getElementById("lessonDate").value;
+    const objective = document.getElementById("lessonObjective").value.trim();
+
+    const card = document.createElement("div");
+    card.className = "task";
+
+    const heading = document.createElement("b");
+    heading.textContent = topic;
+
+    const details = document.createElement("p");
+    details.textContent = subject + " | " + date;
+
+    const goal = document.createElement("p");
+    goal.textContent = "Objective: " + objective;
+
+    card.append(heading, details, goal);
+    document.getElementById("lessonList").appendChild(card);
+    event.target.reset();
+}
+
+function addAttendance(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("studentName").value.trim();
+    const roll = document.getElementById("rollNumber").value.trim();
+    const status = document.getElementById("attendanceStatus").value;
+
+    const row = document.createElement("tr");
+
+    [roll, name, status].forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+    });
+
+    document.getElementById("attendanceTable").appendChild(row);
+    event.target.reset();
+}
+
+function addMarks(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("marksName").value.trim();
+    const subject = document.getElementById("marksSubject").value.trim();
+    const obtained = Number(document.getElementById("obtainedMarks").value);
+    const maximum = Number(document.getElementById("maximumMarks").value);
+
+    if (maximum <= 0 || obtained < 0 || obtained > maximum) {
+        alert("Please enter valid marks.");
+        return;
+    }
+
+    const percentage = (obtained / maximum * 100).toFixed(2);
+    const row = document.createElement("tr");
+
+    [name, subject, obtained + "/" + maximum, percentage + "%"].forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+    });
+
+    document.getElementById("marksTable").appendChild(row);
+    event.target.reset();
+}
+
+function addMaterial(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("materialTitle").value.trim();
+    const link = document.getElementById("materialLink").value.trim();
+
+    try {
+        const url = new URL(link);
+        if (!["http:", "https:"].includes(url.protocol)) {
+            throw new Error("Invalid protocol");
+        }
+
+        const card = document.createElement("div");
+        card.className = "task";
+
+        const heading = document.createElement("b");
+        heading.textContent = title + " ";
+
+        const anchor = document.createElement("a");
+        anchor.href = url.href;
+        anchor.textContent = "Open Material";
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+
+        card.append(heading, anchor);
+        document.getElementById("materialList").appendChild(card);
+        event.target.reset();
+    } catch {
+        alert("Please enter a valid HTTP or HTTPS link.");
+    }
+}
+
+function addPractical(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("practicalTitle").value.trim();
+    const date = document.getElementById("practicalDate").value;
+
+    const card = document.createElement("div");
+    card.className = "task";
+
+    const heading = document.createElement("b");
+    heading.textContent = title;
+
+    const details = document.createElement("p");
+    details.textContent = "Submission date: " + date;
+
+    card.append(heading, details);
+    document.getElementById("practicalList").appendChild(card);
+    event.target.reset();
+}
+
+function addQuestion(event) {
+    event.preventDefault();
+
+    const subject = document.getElementById("questionSubject").value.trim();
+    const question = document.getElementById("questionText").value.trim();
+    const marks = document.getElementById("questionMarks").value;
+
+    const card = document.createElement("div");
+    card.className = "task";
+
+    const heading = document.createElement("b");
+    heading.textContent = subject + " — " + marks + " marks";
+
+    const content = document.createElement("p");
+    content.textContent = question;
+
+    card.append(heading, content);
+    document.getElementById("questionList").appendChild(card);
+    event.target.reset();
+}
+
+function addNotice(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("noticeTitle").value.trim();
+    const details = document.getElementById("noticeDetails").value.trim();
+
+    const card = document.createElement("div");
+    card.className = "notice";
+
+    const heading = document.createElement("b");
+    heading.textContent = title;
+
+    const content = document.createElement("p");
+    content.textContent = details;
+
+    card.append(heading, content);
+    document.getElementById("noticeList").prepend(card);
+    event.target.reset();
+}
+
+function generateReport() {
+    const subjects = document.getElementById("subjectTable").rows.length;
+    const attendance = document.getElementById("attendanceTable").rows.length;
+    const marks = document.getElementById("marksTable").rows.length;
+
+    const output = document.getElementById("reportOutput");
+    output.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent = "TeachFlow Summary";
+    heading.style.marginTop = "20px";
+
+    const list = document.createElement("ul");
+    [
+        "Subjects: " + subjects,
+        "Attendance records: " + attendance,
+        "Marks records: " + marks
+    ].forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        li.style.margin = "10px 0";
+        list.appendChild(li);
+    });
+
+    output.append(heading, list);
+}
+</script>
+
+</body>
+</html>
